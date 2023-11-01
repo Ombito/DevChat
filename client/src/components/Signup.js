@@ -1,26 +1,11 @@
-<<<<<<< HEAD
-import React from "react";
-
-
-function Login() {
-
-    return (
-        <div className="inbox" >
-
-        </div>
-    );
-}
-
-export default Login;
-=======
 import React from 'react'
 
-const Login = () => {
+const Signup = () => {
   return (
     <div>
-        <h1>Login to your Account</h1>
-        <div>Signin with Google</div>
-        <div> Signin with Apple</div>
+        <h1>Create your Account</h1>
+        <div>Sign up with Google</div>
+        <div> Sign up with Apple</div>
         <div>
             <div></div>
             <div>Or</div>
@@ -39,11 +24,9 @@ const Login = () => {
             <input/>
             <button>Sign up</button>
         </form>
-        <p>Forgot password?</p>
-        <h4>Sign up</h4>
+        <h4>Login</h4>
     </div>
   )
 }
 
-export default Login
->>>>>>> 38242f2c4b0b56330fcb3187c3e5488f9e547ad3
+export default Signup
