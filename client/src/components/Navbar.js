@@ -1,12 +1,12 @@
 import React from "react";
-import logo from '../App';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Link } from "react-router-dom";
 import "../App.css";
+import logo from '../Assets/logo.png';
 
 function Navbar() {
-
+ 
     return (
         <nav className="nav" >
             <div className="logo">

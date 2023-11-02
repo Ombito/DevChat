@@ -1,5 +1,7 @@
 import React ,{ useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+// import Navbar from "./components/Navbar";
+import Navbar from './Navbar'
 
 function Homepage() {
     const navigate = useNavigate();
@@ -29,6 +31,7 @@ function Homepage() {
 
     return (
         <div>
+            <Navbar />
             <div>
                 <form className="search">
                     <input type="text" placeholder="search..." value={search} onChange={handleChange} />
@@ -50,7 +53,9 @@ function Homepage() {
             ))}
             </div>
             <div className="inbox">
-                <h1 className="chattxt">Chat</h1>
+                <h1 className="chattxt">Inbox</h1>
+                <h1 className="chattxt">Trends</h1>
+                <h1 className="chattxt">Notifications</h1>
                 
             </div>
         </div>

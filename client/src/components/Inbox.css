@@ -1,0 +1,24 @@
+.inbox-header {
+    display: flex;
+    justify-content: space-between;
+}
+.inbox-header input {
+    height: 4vh;
+    width: 25%;
+    border-radius: 16px;
+}
+.user-group {
+    display: flex;
+    justify-content: space-between;
+}
+/* .user-group img {
+    height: 5vh;
+    border-radius: 50%;
+} */
+.user-item {
+    display: flex;
+    flex-direction: row;
+}
+.user-details {
+    gap: 1%;
+}
