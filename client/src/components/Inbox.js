@@ -4,7 +4,7 @@ function Inbox() {
 
     return (
         <div>
-            
+
         </div>
     );
 };

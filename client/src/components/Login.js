@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-
-
-function Login() {
-
-    return (
-        <div className="inbox" >
-
-        </div>
-    );
-}
-
-export default Login;
-=======
 import React from 'react'
 
 const Login = () => {
@@ -46,4 +31,3 @@ const Login = () => {
 }
 
 export default Login
->>>>>>> 38242f2c4b0b56330fcb3187c3e5488f9e547ad3
