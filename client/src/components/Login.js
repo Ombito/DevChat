@@ -1,49 +1,40 @@
-<<<<<<< HEAD
-import React from "react";
-
-
-function Login() {
-
-    return (
-        <div className="inbox" >
-
-        </div>
-    );
-}
-
-export default Login;
-=======
-import React from 'react'
+import React from 'react';
+import './Login.css';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   return (
-    <div>
-        <h1>Login to your Account</h1>
-        <div>Signin with Google</div>
-        <div> Signin with Apple</div>
-        <div>
-            <div></div>
-            <div>Or</div>
-            <div></div>
+    <div className="login-container">
+      <div className="login-header">
+        <div></div>
+        <h1>Sign in to DevChat</h1>
+        <div></div>
+      </div>
+      <form>
+        <div className="form-group">
+          <label>Username</label>
+          <input type="text" id="username" placeholder='Enter your username' required/>
         </div>
-        <form>
-            <label>Name</label>
-            <input/>
-            <label>Username</label>
-            <input/>
-            <label>Email</label>
-            <input/>
-            <label>Password</label>
-            <input/>
-            <label>Re-enter password</label>
-            <input/>
-            <button>Sign up</button>
-        </form>
-        <p>Forgot password?</p>
-        <h4>Sign up</h4>
+        <div className="form-group">
+          <label>Password</label>
+          <input type="password" id="password" placeholder='Enter your password' required/>
+        </div>
+        <button className="login-button">Login</button>
+      </form>
+      <div id="checkbox">
+        <div className="checkbox-remember">
+          <input type="checkbox" id="remember-me" />
+          <label>Remember me</label>
+        </div>
+        <p className="forgot-password">Forgot password?</p>
+      </div>
+      <Link to="/signup" className="signup-link">
+        <h4>
+          Don't have an account? <span>Sign up</span>
+        </h4>
+      </Link>
     </div>
-  )
-}
+  );
+};
 
-export default Login
->>>>>>> 38242f2c4b0b56330fcb3187c3e5488f9e547ad3
+export default Login;
