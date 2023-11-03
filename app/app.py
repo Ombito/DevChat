@@ -1,7 +1,7 @@
 from flask_cors import CORS
 from flask import Flask, jsonify
 from flask_restful import Api, Resource, reqparse
-from models import User, Post, Comment, Like, FriendRequest, db
+from models import User, Post, Comment, Like, Friend, db
 from flask_migrate import Migrate
 
 app = Flask(__name__)
@@ -14,16 +14,18 @@ db.init_app(app)
 api = Api(app)
 migrate = Migrate(app, db)
 
+    #  resource for users
 class UserResource(Resource):
     def get(self):
         users = User.query.all()
         user_list = [{"id": user.id, "username": user.username, "email": user.email, "bio": user.bio} for user in users]
         return jsonify(users=user_list)
 
+    # resource for posts
 class PostResource(Resource):
     def get(self):
         posts = Post.query.all()
-        post_list = [{"id": post.id, "message": post.message, "user_id": post.user_id, "image": post.image} for post in posts]
+        post_list = [{"id": post.id, "message": post.message, "user_pic": post.user_pic, "user_id": post.user_id, "image": post.image} for post in posts]
         return jsonify(posts=post_list)
 
     def post(self):
@@ -45,6 +47,7 @@ class PostDetailResource(Resource):
         db.session.commit()
         return jsonify(message='Post deleted successfully')
 
+    # resource for comments
 class CommentResource(Resource):
     def get(self):
         comments = Comment.query.all()
@@ -96,7 +99,7 @@ class LikeDetailResource(Resource):
 
 class FriendRequestResource(Resource):
     def get(self):
-        friend_requests = FriendRequest.query.all()
+        friend_requests = Friend.query.all()
         friend_request_list = [{"id": friend_request.id, "sender_id": friend_request.sender_id, "receiver_id": friend_request.receiver_id} for friend_request in friend_requests]
         return jsonify(friend_requests=friend_request_list)
 

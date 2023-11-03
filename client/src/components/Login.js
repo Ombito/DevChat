@@ -19,7 +19,9 @@ const Login = () => {
           <label>Password</label>
           <input type="password" id="password" placeholder='Enter your password' required/>
         </div>
-        <button className="login-button">Login</button>
+        <Link to="/homepage">
+          <button className="login-button">Login</button>
+        </Link>
       </form>
       <div id="checkbox">
         <div className="checkbox-remember">

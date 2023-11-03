@@ -12,12 +12,11 @@
 }
 
 .nav-links{
-  margin-left: 20%;
-  margin-top: 2%;
+  margin: -5% 20%;
   display: flex; 
   font-weight: bold;
   font-size: 2em;
-  gap: 15%;
+  gap: 25%;
 
 }
 
