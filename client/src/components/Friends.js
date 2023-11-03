@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaEnvelope } from 'react-icons/fa';
 
 function Friends() {
     const [friends, setFriends] = useState([]);
@@ -14,6 +15,9 @@ function Friends() {
                 console.error('Error fetching data:', error);
             });
     }, []);
+    
+    function handleMessage(){
+    };
 
     return (
         <div className='friend'>
@@ -25,6 +29,7 @@ function Friends() {
                         <img src={friend.image} alt={friend.name} className="inboximg" />
                         </div>
                         {friend.user}
+                        <button onClick={handleMessage}><FaEnvelope /> Message</button>
                     </li>
 
                 ))}

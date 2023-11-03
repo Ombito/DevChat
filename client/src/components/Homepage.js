@@ -1,25 +1,29 @@
 import React ,{ useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaThumbsUp, FaComment,FaReply } from 'react-icons/fa';
 
-function Homepage() {
+function Homepage({ post }) {
     const navigate = useNavigate();
     const [getPosts, setPosts] = useState([]);
+    const [likes, setLikes] = useState(post?.likes || 0);
     const [newPost, setNewPost] = useState({ user: "", message: "" });
+    const [search, setSearch] = useState('')
     useEffect(() => {
         fetch("http://localhost:3000/posts")
             .then((response) => response.json())
             .then((data) => setPosts(data));
     }, []);
-
-    const [search, setSearch] = useState('')
-
-   
-    const handleCommentClick = (postId) => {
+    function handleCommentClick(postId){
         navigate(`/post/${postId}`);
+    }
+    function handleReply() {
     }
     function handleChange(e) {
         setSearch(e.target.value)
     }
+    function handleLike(){
+        setLikes(likes + 1);
+    };
     const filtered = getPosts.filter((i) => {
         if (search === '') {
             return true;
@@ -79,10 +83,9 @@ function Homepage() {
                     <div className="ptext">
                     <p1> {post.message}</p1>
                     <h4>{post.timestamp}</h4>
-                    <h4> {post.likes}</h4>
+                    <button onClick={handleLike}><FaThumbsUp /> Like ({likes})</button>
+                    <button onClick={() => handleCommentClick(post.id)}><FaComment /> Comment</button>
                     <div className="timestamp">{new Date().toLocaleString()}</div>
-                    
-                    <button onClick={() => handleCommentClick(post.id)}>Comment</button>
                     </div>
                 </div>
             ))}
@@ -97,6 +100,7 @@ function Homepage() {
                             </div>
                             <div className="username">{`${user.username}`}</div>
                             <div className="message">{user.message}</div>
+                            <button onClick={handleReply}><FaReply /> Reply</button>
                             <div className="timestamp">{new Date().toLocaleString()}</div>
                         </li>
                     ))}
