@@ -21,8 +21,12 @@ function Friends() {
             <ul className="friends-list">
                 {friends.map((friend) => (
                     <li key={friend.id} className="friend-item">
+                        <div className="frimg">
+                        <img src={friend.image} alt={friend.name} className="inboximg" />
+                        </div>
                         {friend.user}
                     </li>
+
                 ))}
             </ul>
         </div>

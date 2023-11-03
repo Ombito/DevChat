@@ -3,16 +3,23 @@ import React, { useState, useEffect } from "react";
 
 function Profile ({ userId }) {
     const [user, setUser] = useState(null);
-   
+
     useEffect(() => {
-        fetch(`http://localhost:3000/users/${userId}`)
-            .then((response) => response.json())
-            .then((data) => {
-                setUser(data);
-               
+        const userSession = sessionStorage.getItem('userSession'); 
+
+        if (userSession) {
+            fetch('/api/user', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${userSession}`                 }
             })
-            
-    }, [userId]);
+                .then((response) => response.json())
+                .then((data) => {
+                    setUser(data);
+                })
+                .catch((error) => console.error(error));
+        }
+    }, []);
     return (
         <div>
         <div className="profile">

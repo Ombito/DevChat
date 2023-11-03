@@ -53,6 +53,12 @@ body{
 .main{
   display: flex;
 }
+.createpost{
+  position: fixed;
+  margin-top:-3%;
+  margin-left: 8%;
+
+}
 
 .search{
   margin-left: 84%;
@@ -60,16 +66,12 @@ body{
   border-radius: 5em;
   position: fixed;
   background-color:rgb(49,51,56);
-  
 
 }
-
-
-
 .post {
-  width: 57%;
-  margin-left: 3%;
-  margin-top: -2%;
+  width: 50%;
+  margin-left: 7%;
+  margin-top: 1%;
   padding: 25px;
   border-radius: 10px;
   color: aliceblue;
@@ -78,7 +80,8 @@ body{
 }
 .postpic{
   border-radius: 10em;
-  width: 10%;
+  width: 6%;
+  margin: 2%;
 
 }
 .post2{
@@ -86,16 +89,17 @@ body{
 }
 
 .ptext{
-  border-radius: 2em;
   background-color:rgb(76, 80, 88);
-  border-radius: 2em;
+  border-radius: 1em;
   padding: 4%;
+  margin: 1%;
 }
 
 .post img {
-  border-radius: 3em;
-  border: 1px solid #0a0a0a;
+  border-radius: 1em;
   height:10% ;
+  margin-left: 2%;
+ 
 }
 .inbox {
   width: 30%;
@@ -111,10 +115,19 @@ body{
   
  
 }
+.inboximg{
+  width: 36%;
+  border-radius: 100%;
+}
+.frimg{
+  width: 10%;
+  border-radius: 100%;
+}
 .cin {
   text-align: center;
   font-size: bold;
   border: 3px solid #302d2d;
+  border-radius: 1em;
   
 }
 .chattxt {
@@ -123,10 +136,13 @@ body{
   
 }
 
+
 .user-entry {
-  border: 1px solid #0a0a0a;
+  border: 2px solid #302d2d;;
   padding: 10px;
   margin: 10px;
+  border-radius: 1em;
+  margin-left: -3%;
 }
 
 .username {
