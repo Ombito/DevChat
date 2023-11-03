@@ -1,0 +1,79 @@
+.search{
+    margin-left: 42%;
+    margin-top: -2%;
+    position: fixed;
+    background-color:rgb(49,51,56);
+    height: 20%;
+  }
+
+  .search input {
+    height: 5vh;
+    width: 27em;
+    border-radius: 4em;
+  }
+  .createpost{
+    display: flex;
+    position: fixed;
+    margin-top: -1.8%;
+    margin-left: 3%;
+    height: 4vh;
+    gap: 5px;
+  }
+  .createpost textarea {
+    height: 6vh;
+    width: 30em;
+    border-radius: 5px;
+  }
+.createpost button{
+    background-color: blue;
+    width: 20%;
+}
+.post {
+  width: 60%;
+  margin-left: 2%;
+  margin-top: 2%;
+  padding: 25px;
+  border-radius: 10px;
+  color: aliceblue;
+  background:rgb(70, 72, 77);
+  overflow-y: auto;
+  max-height: 80vh;
+}
+.ptext{
+  background-color:rgb(76, 80, 88);
+  border-radius: 1em;
+  padding: 0 2%;
+  margin-bottom: 5%;
+}
+.inbox {
+  width: 30%;
+  border-radius: 10px;
+  color: aliceblue;
+  background:rgb(70, 72, 77);
+  margin-left: 68%;
+  margin-top: 1%;
+  position: fixed;
+  height: 75%;
+  overflow: auto;
+}
+.post2{
+  height: 20%;
+  width: 100%;
+  border-radius: 50%;
+}
+.user-group img {
+  height: 10vh;
+}
+.post-group {
+  display: flex;
+  flex-direction: column;
+}
+.post-group p1 {
+  padding-bottom: 2%;
+  padding-left: 2%;
+  font-size: 18px;
+  width: 100%;
+}
+.postimg {
+  padding-left: 2%;
+}

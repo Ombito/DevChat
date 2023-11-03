@@ -6,31 +6,29 @@
   height: 40vmin;
   pointer-events: none;
 }
-.logo{
-  width: 4%;
+.logo img{
+  height: 10vh;
+  padding: 1%;
 }
 
 .nav-links{
   margin-left: 19%;
-  margin-top: 4%;
+  margin-top: 6%;
   display: flex; 
   font-weight: bold;
+  font-size: 2em;
+  gap: 25%;
 
 }
+
 .nav1{
   color: #ffffff;
-  
 }
 .nav2{
   color: #ffffff;
-  margin-left: 30%;
-  
 }
 .nav3{
   color: #ffffff;
-  margin-left: 55%;
-  
-  
 }
 
 body{
@@ -42,7 +40,7 @@ body{
   z-index: 1000;
   position: fixed;
   width: 100%;
-  height: 15%;
+  height: 20%;
   background-color:rgb(2, 7, 37);
   top: 0;
   left: 0;
@@ -134,94 +132,4 @@ body{
   text-align: center;
   font-size: bold;
   
-}
-
-
-.user-entry {
-  border: 2px solid #302d2d;;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 1em;
-  margin-left: -3%;
-}
-
-.username {
-  font-weight: bold;
-}
-
-.message {
-  margin-top: 5px;
-}
-
-.timestamp {
-  font-size: 12px;
-  color: #888;
-}
-.profile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  border: 3px solid rgb(28, 28, 31);
-  border-radius: 10px;
-}
-
-.profile-picture img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 5px solid #fff;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-}
-
-.user-info {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.username {
-  font-size: 24px;
-}
-
-.full-name {
-  font-size: 16px;
-  color: #606770;
-}
-
-.age,
-.dob {
-  font-size: 14px;
-  color: #606770;
-  margin-top: 5px;
-}
-
-.edit-profile-button {
-  background-color: #1877f2;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-.edit-profile-button:hover {
-  background-color: #1155cc;
-}
-.friends-list {
-  list-style: none;
-  padding: 0;
-}
-
-.friend-item {
-  border: 5px solid #494545;
-  padding: 10px;
-  margin: 5px;
-  border-radius: 5px;
-}
-.friend{
-  border: 3px solid rgb(28, 28, 31);
-  border-radius: 10px;
 }

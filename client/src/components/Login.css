@@ -1,0 +1,62 @@
+.login-container {
+  max-width: 30%;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+.login-header h1 {
+  font-size: 24px;
+  color: #333;
+  margin: 20px 0;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  color: #090909;
+  font-size: 18px;
+  padding-bottom: 1%;
+}
+.form-group input {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 2%;
+}
+.login-button {
+  background-color: #4285f4;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 2%;
+}
+#checkbox {
+  display: flex;
+  justify-content: space-between;
+}
+.signup-link {
+  text-decoration: none;
+}
+.signup-link h4 {
+  font-size: 16px;
+  color: black;
+}
+.signup-link span {
+  font-weight: bold;
+  color: blue
+}
+h1 {
+  color: black;
+}
