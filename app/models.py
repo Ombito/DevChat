@@ -1,9 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-
+from flask_bcrypt import Bcrypt
+from sqlalchemy.ext.hybrid import hybrid_property
 
 db = SQLAlchemy()
-
+bcrypt = Bcrypt()
 
 class User(db.Model):
     __tablename__ = 'users'  
@@ -16,7 +17,7 @@ class User(db.Model):
     age = db.Column(db.Integer)
     gender = db.Column(db.String(255), nullable=False) 
     profile_picture = db.Column(db.String(255))
-    password = db.Column(db.String(255), nullable=False)
+    _password_hash = db.Column(db.String(255), nullable=False)
 
     posts = db.relationship('Post', back_populates='user')
     comments = db.relationship('Comment', back_populates='user')
@@ -24,6 +25,27 @@ class User(db.Model):
     friends = db.relationship('Friend', foreign_keys='Friend.user_id', back_populates='user')
     inboxes = db.relationship('Inbox', back_populates='user')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'full_name': self.full_name,
+            'username': self.username,
+            'email': self.email,
+            'gender': self.gender
+        }
+    
+    @hybrid_property
+    def password_hash(self):
+        raise AttributeError('password hash may not be viewed')
+
+    @password_hash.setter
+    def password_hash(self,password):
+        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
+        self._password_hash = password_hash.decode('utf-8')
+
+    def authenticate(self,password):
+        return bcrypt.check_password_hash(self._password_hash,password.encode('utf-8'))
+    
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}')>"
 

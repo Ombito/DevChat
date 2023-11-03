@@ -1,5 +1,5 @@
 from flask_cors import CORS
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, session, make_response
 from flask_restful import Api, Resource, reqparse
 from models import User, Post, Comment, Like, Friend, db
 from flask_migrate import Migrate
@@ -10,9 +10,27 @@ CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key='qwwerrtyyu123'
 db.init_app(app)
 api = Api(app)
 migrate = Migrate(app, db)
+
+
+
+# @app.before_request
+# def check_if_logged_in():
+#     user_id = session.get("user_id")
+#     if user_id is None and request.endpoint != 'login' and request.endpoint != 'checksession':
+#         return {"error": "unauthorized"}, 401
+    
+
+class Index(Resource):
+    def get(self):
+        response_body = '<h1>Hello World</h1>'
+        status = 200
+        headers = {}
+        return make_response(response_body,status,headers)
+    
 
     #  resource for users
 class UserResource(Resource):
@@ -20,6 +38,72 @@ class UserResource(Resource):
         users = User.query.all()
         user_list = [{"id": user.id, "username": user.username, "email": user.email, "bio": user.bio} for user in users]
         return jsonify(users=user_list)
+
+class CheckSession(Resource):
+    def get(self):
+        if session.get('user_id'):
+            user = User.query.filter(User.id==session["user_id"]).first()
+            return user.to_dict(), 200
+        return {"error":"Resource not found"}
+
+# class Signup(Resource):
+#     def post(self):
+#         data = request.get_json()
+#         full_name = data.get('full_name')
+#         username = data.get('username')
+#         password = data.get('password')
+#         email = data.get('email')
+#         gender = data.get('gender')
+
+#         if username and email and password:
+#             new_user = User(full_name=full_name, username=username, email=email, gender=gender)
+#             # new_user.set_password(password)
+#             new_user.password_hash = password
+
+#             db.session.add(new_user)
+#             db.session.commit()
+#             session['user_id'] = new_user.id
+
+#             return new_user.to_dict(), 201
+#         return {"error": "user details must be added"}, 422
+    
+class Signup(Resource):
+    def post(self):
+        data = request.get_json()
+        full_name = data.get('full_name')
+        username = data.get('username')
+        password = data.get('password')
+        email = data.get('email')
+        gender = data.get('gender')
+
+        if full_name and username and email and password:
+            new_user = User(full_name=full_name, username=username, email=email, gender=gender)
+            new_user.password_hash = password
+            db.session.add(new_user)
+            db.session.commit()
+            session['user_id'] = new_user.id
+            return new_user.to_dict(), 201
+        return {"error": "user details must be added"}, 422
+
+class Login(Resource):
+    def post(self):
+        email  = request.get_json().get('email')
+        password = request.get_json().get("password")
+        user = User.query.filter(User.email == email).first()
+        if user and user.authenticate(password):
+            session['user_id']=user.id
+            return user.to_dict(),201
+        else:
+            return {"error":"username or password is incorrect"},401
+        
+class Logout(Resource):
+    def delete(self):
+        if session.get("user_id"):
+            session['user_id']=None
+            return {"success":"you have been logged out successfully"}
+        else:
+            return {"error":"unauthorized 401"}
+
 
     # resource for posts
 class PostResource(Resource):
@@ -103,8 +187,14 @@ class FriendRequestResource(Resource):
         friend_request_list = [{"id": friend_request.id, "sender_id": friend_request.sender_id, "receiver_id": friend_request.receiver_id} for friend_request in friend_requests]
         return jsonify(friend_requests=friend_request_list)
 
+
+api.add_resource(Index,'/', endpoint='landing')
 api.add_resource(UserResource, '/users')
 api.add_resource(PostResource, '/posts')
+api.add_resource(Signup,'/signup', endpoint='signup')
+api.add_resource(Login,'/login', endpoint='login')
+api.add_resource(CheckSession,'/checksession', endpoint='checksession')
+api.add_resource(Logout,'/logout', endpoint='logout')
 api.add_resource(PostDetailResource, '/posts/<int:post_id>')
 api.add_resource(CommentResource, '/comments')
 api.add_resource(CommentDetailResource, '/comments/<int:comment_id>')
