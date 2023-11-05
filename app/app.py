@@ -1,11 +1,12 @@
 from flask_cors import CORS
 from flask import Flask, jsonify, request, session, make_response
 from flask_restful import Api, Resource, reqparse
-from models import User, Post, Comment, Like, Friend, db
+from models import User, Post, Comment, Like, Friend, Topic,db
 from flask_migrate import Migrate
 
 app = Flask(__name__)
 CORS(app)
+
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -36,8 +37,10 @@ class Index(Resource):
 class UserResource(Resource):
     def get(self):
         users = User.query.all()
-        user_list = [{"id": user.id, "username": user.username, "email": user.email, "bio": user.bio} for user in users]
+        user_list = [{"id": user.id, "username": user.username, "email": user.email, "bio": user.bio, "profile_picture": user.profile_picture, "age": user.age, "gender": user.gender,"full_name": user.full_name } for user in users]
         return jsonify(users=user_list)
+    
+    
 
 class CheckSession(Resource):
     def get(self):
@@ -187,21 +190,29 @@ class FriendRequestResource(Resource):
         friend_request_list = [{"id": friend_request.id, "sender_id": friend_request.sender_id, "receiver_id": friend_request.receiver_id} for friend_request in friend_requests]
         return jsonify(friend_requests=friend_request_list)
 
+    
+class TopicResource(Resource):
+    def get(self):
+        topics= Topic.query.all()
+        topic_list = [{'id': topic.id, 'title': topic.title, 'topic_text': topic.topic_text, 'created_at': topic.created_at.strftime('%Y-%m-%d %H:%M:%S')} for topic in topics]
+        return jsonify(topic_list)
+
+
 
 api.add_resource(Index,'/', endpoint='landing')
 api.add_resource(UserResource, '/users')
 api.add_resource(PostResource, '/posts')
+api.add_resource(PostDetailResource, '/posts/<int:post_id>')
 api.add_resource(Signup,'/signup', endpoint='signup')
 api.add_resource(Login,'/login', endpoint='login')
 api.add_resource(CheckSession,'/checksession', endpoint='checksession')
 api.add_resource(Logout,'/logout', endpoint='logout')
-api.add_resource(PostDetailResource, '/posts/<int:post_id>')
 api.add_resource(CommentResource, '/comments')
 api.add_resource(CommentDetailResource, '/comments/<int:comment_id>')
 api.add_resource(LikeResource, '/likes')
 api.add_resource(LikeDetailResource, '/likes/<int:like_id>')
 api.add_resource(FriendRequestResource, '/friend_requests')
-
+api.add_resource(TopicResource, '/topic')
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
 

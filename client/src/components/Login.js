@@ -1,4 +1,4 @@
-import React, { useState }  from 'react';
+import React, { useState } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     fetch('http://localhost:5555/login', {
       method: 'POST',
       headers: {
@@ -54,13 +54,13 @@ const Login = () => {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Email</label>
-          <input type="email" id="username" placeholder='Enter your email' onChange={(e) => setEmail(e.target.value)} required/>
+          <input type="email" id="username" placeholder='Enter your email' onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div className="form-group">
           <label>Password</label>
-          <input type="password" id="password" placeholder='Enter your password' onChange={(e) => setPassword(e.target.value)} required/>
+          <input type="password" id="password" placeholder='Enter your password' onChange={(e) => setPassword(e.target.value)} required />
         </div>
-          <button className="login-button" type="submit">Login</button>     
+        <button className="login-button" type="submit">Login</button>
       </form>
       {success && <p className="success-message">{success}</p>}
       {error && <p className="error-message">{error}</p>}

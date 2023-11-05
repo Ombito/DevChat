@@ -29,7 +29,7 @@ function InboxList() {
 
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       {users.map((user) => (
         <div key={user.id} className="user-item">
           <div className='user-group'>
@@ -50,7 +50,7 @@ function InboxList() {
 const Inbox = () => {
   return (
     <div className='inbox-container'>
-        <h1>Inbox</h1>
+      <h1>Inbox</h1>
       <div className='inbox-header'>
         <input type="text" placeholder="Search messages" />
         <h4>New Message</h4>

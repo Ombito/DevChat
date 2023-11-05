@@ -13,7 +13,7 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     fetch('http://localhost:5555/signup', {
       method: 'POST',
       headers: {

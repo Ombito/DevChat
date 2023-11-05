@@ -25,8 +25,8 @@
     border-radius: 5px;
   }
 .createpost button{
-    background-color: blue;
-    width: 20%;
+    background-color:rgb(2, 7, 37);
+    color: rgb(247, 250, 252);
 }
 .post {
   width: 60%;
@@ -36,8 +36,8 @@
   border-radius: 10px;
   color: aliceblue;
   background:rgb(70, 72, 77);
-  overflow-y: auto;
-  max-height: 80vh;
+  overflow: auto;
+  max-height: 66vh;
 }
 .ptext{
   background-color:rgb(76, 80, 88);
@@ -45,13 +45,13 @@
   padding: 0 2%;
   margin-bottom: 5%;
 }
-.inbox {
-  width: 30%;
+.topics {
+  width: 25%;
   border-radius: 10px;
   color: aliceblue;
   background:rgb(70, 72, 77);
-  margin-left: 68%;
-  margin-top: 1%;
+  margin-left: 71%;
+  margin-top: -2%;
   position: fixed;
   height: 75%;
   overflow: auto;
@@ -76,4 +76,16 @@
 }
 .postimg {
   padding-left: 2%;
+}
+.inbox {
+  width: 27%;
+  margin-top: 1%;
+  margin-left: 70%;
+  border: 3px solid rgb(28, 28, 31);
+  padding: 10px;
+  color: rgb(255, 255, 255);
+  background:rgb(70, 72, 77);
+  position: fixed;
+  border-radius: 10px;
+ 
 }
