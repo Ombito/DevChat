@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaThumbsUp, FaComment, FaReply } from 'react-icons/fa';
+import { FaThumbsUp, FaComment } from 'react-icons/fa';
 import Navbar from './Navbar';
 import './Homepage.css';
 
@@ -11,7 +11,7 @@ function Homepage({ post }) {
   const [likes, setLikes] = useState(post?.likes || 0);
   const [newPost, setNewPost] = useState({ user: '', message: '' });
   const [search, setSearch] = useState('');
-  const [users, setUsers] = useState([]);
+  const [topics, setTopics] = useState([]);
 
 
   useEffect(() => {
@@ -25,11 +25,13 @@ function Homepage({ post }) {
         }
       });
 
-    fetch('http://127.0.0.1:5555/users')
+    fetch('http://127.0.0.1:5555/topics')
       .then((response) => response.json())
       .then((data) => {
-        if (data && Array.isArray(data.users)) {
-          setUsers(data.users);
+        if (data && Array.isArray(data.topic)) {
+          setTopics(data.topic);
+          
+
         } else {
           console.error('Data is not in the expected format:', data);
         }
@@ -37,8 +39,7 @@ function Homepage({ post }) {
   }, []);
 
   function addNewPost() {
-    if (newPost.user && newPost.message) {
-      fetch("http://localhost:5555/posts", {
+      fetch("http://127.0.0.1:5555/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,18 +47,15 @@ function Homepage({ post }) {
         body: JSON.stringify(newPost),
       })
         .then((response) => response.json())
-        .then((data) => {
-          setPosts([...getPosts, data]);
-          setNewPost({ user: "", message: "" });
-        });
-    }
-  };
+        .then((data) => setPosts(data));
+      
+      
+  }
+
 
   function handleCommentClick(postId) {
     navigate(`/post/${postId}`);
   }
-
-  function handleReply() { }
 
   function handleChange(e) {
     setSearch(e.target.value);
@@ -83,19 +81,21 @@ function Homepage({ post }) {
         <input type="text" placeholder="Search posts" value={search} onChange={handleChange} />
       </form>
       <div className="createpost">
+        <form submit={{ addNewPost }}>
         <textarea
           placeholder="Write a post"
           value={newPost.message}
           onChange={(e) => setNewPost({ ...newPost, message: e.target.value })}
         />
-        <button onClick={addNewPost}>Post</button>
+        <button type='submit' >Post</button>
+        </form>
       </div>
 
       <div className="post">
-        {getPosts.map((post) => (
+        {filtered.map((post) => (
           <div key={post.id} className="user-item">
             <div className="user-group">
-              <img src={post.user_pic} alt="Profile picture" className="post2" />
+              <img src={post.user_pic} alt="Profile" className="post2" />
             </div>
             <div className="post-group">
               <p1> {post.message}</p1>
@@ -113,20 +113,14 @@ function Homepage({ post }) {
         ))}
       </div>
 
-      <div className="inbox">
-        <h1 className="cin">MESSAGES</h1>
-        <ul style={{ listStyleType: 'none' }} className="inbox1">
-          {users.map((user, index) => (
-            <li key={index} className="user-entry">
-              <div className="inboximg">
-                <img src={user.image} alt={user.name} className="inboximg" />
-              </div>
-              <div className="username">{`${user.username}`}</div>
-              <div className="message">{user.message}</div>
-              <button onClick={handleReply}>
-                <FaReply /> Reply
-              </button>
-              <div className="timestamp">{new Date().toLocaleString()}</div>
+      <div className="topics">
+        <h1 className="cin">Topics</h1>
+        <ul>
+          {topics.map((topic) => ( 
+            <li key={topic.id}>
+              {topic.title}<br />
+              {topic.topic_text}<br />
+              {topic.created_at}<br />
             </li>
           ))}
         </ul>

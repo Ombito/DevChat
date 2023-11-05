@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUsers, faUser ,faInbox} from '@fortawesome/free-solid-svg-icons';
 import { Link } from "react-router-dom";
 import "../App.css";
 import logo from '../Assets/logo.png';
@@ -16,6 +16,7 @@ function Navbar() {
                 <Link to="/homepage" className="nav1"><FontAwesomeIcon icon={faHome} /></Link>
                 <Link to="/friends" className="nav2"><FontAwesomeIcon icon={faUsers} /></Link>
                 <Link to="/profile" className="nav3"><FontAwesomeIcon icon={faUser} /></Link>
+                <Link to="/inbox" className="nav4"><FontAwesomeIcon icon={faInbox} /></Link>
             </div>
         </nav>
     );
