@@ -79,16 +79,19 @@ function Homepage({ post }) {
   return (
     <div className="main">
       <Navbar />
-      <form className="search">
+      {/* <form className="search">
         <input type="text" placeholder="Search posts" value={search} onChange={handleChange} />
-      </form>
+      </form> */}
       <div className="createpost">
         <textarea
           placeholder="Write a post"
           value={newPost.message}
           onChange={(e) => setNewPost({ ...newPost, message: e.target.value })}
         />
-        <button onClick={addNewPost}>Post</button>
+        <div className='img-div'>
+          <input placeholder="Enter image URL" className='img-post'/>
+          <button onClick={addNewPost}>Post</button>
+        </div>
       </div>
 
       <div className="post">
