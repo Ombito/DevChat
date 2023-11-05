@@ -29,6 +29,9 @@
 .nav3{
   color: #ffffff;
 }
+.nav4{
+  color: #ffffff;
+}
 
 body{
   background-color:rgb(49,51,56);
@@ -90,4 +93,73 @@ body{
   align-items: center;
   font-size: bold;
   
+}
+.friendlist1 {
+  border: 3px solid rgb(28, 28, 31);
+  display: flex;
+  border-radius: 10px;
+  
+}
+
+.friend-request-item {
+  margin: 10px;
+  border: #000;
+  list-style: none;
+  border-radius: 10px;
+  
+}
+
+.profile-picture {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* Make it round */
+}
+
+.username {
+  padding: 5px;
+  margin-top: 5px;
+}
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid #000;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 5px;
+}
+
+.profile-picture {
+  text-align: center;
+}
+
+.profile-picture img {
+  width: 150px;
+  height: 150px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  
+}
+
+.profile-details {
+  text-align: center;
+  padding: 10%;
+}
+
+.profile-details h2 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.profile-details p {
+  margin: 5px 0;
+}
+.single{
+  border: 3px solid rgb(28, 28, 31);
+  color: #ffffff;
+  width: 1500%;
+  border-radius: 10px;
+  background-color:rgb(28, 28, 31) ;
+  margin-left: -42%;
+
 }

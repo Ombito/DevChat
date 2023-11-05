@@ -130,6 +130,19 @@ class Message(db.Model):
 
     sender = db.relationship('User', foreign_keys=[sender_id], back_populates='sent_messages')
     receiver = db.relationship('User', foreign_keys=[receiver_id], back_populates='received_messages')
+    def __repr__(self):
+        return f"Inbox(id={self.id}, user='{self.user.username}', message='{self.message}')"
+    
+class Topic(db.Model):
+    __tablename__ = 'topic'
+    id = db.Column(db.Integer, primary_key=True)
+    title=db.Column(db.String(255), nullable=False)
+    topic_text = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"Topic(id={self.id}, user='{self.user.username}', topic='{self.topic}')"
+
 
     def to_dict(self):
         return {
