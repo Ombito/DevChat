@@ -23,7 +23,9 @@ class User(db.Model):
     comments = db.relationship('Comment', back_populates='user')
     likes = db.relationship('Like', back_populates='user')
     friends = db.relationship('Friend', foreign_keys='Friend.user_id', back_populates='user')
-    inboxes = db.relationship('Inbox', back_populates='user')
+    # inboxes = db.relationship('Inbox', back_populates='user')
+    sent_messages = db.relationship('Message', foreign_keys='Message.sender_id', back_populates='sender')
+    received_messages = db.relationship('Message', foreign_keys='Message.receiver_id', back_populates='receiver')
 
     def to_dict(self):
         return {
@@ -116,17 +118,18 @@ class Friend(db.Model):
         return f"<Friend(user='{self.user.username}', friend='{self.friend.username}')>"
 
 
-class Inbox(db.Model):
-    __tablename__ = 'friend_requests'
-    
+class Message(db.Model):
+    __tablename__ = 'messages'
+
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    message = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow) 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    text = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    user = db.relationship('User', back_populates='inboxes')
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    sender = db.relationship('User', foreign_keys=[sender_id], back_populates='sent_messages')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], back_populates='received_messages')
     def __repr__(self):
         return f"Inbox(id={self.id}, user='{self.user.username}', message='{self.message}')"
     
@@ -141,3 +144,13 @@ class Topic(db.Model):
         return f"Topic(id={self.id}, user='{self.user.username}', topic='{self.topic}')"
 
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'text': self.text,
+            'created_at': self.created_at, #.isoformat()
+            "sender_id": self.sender_id,
+            "receiver_id": self.receiver_id,
+            'sender_username': self.sender.full_name if self.sender else None,
+            'receiver_username': self.receiver.full_name if self.receiver else None,
+        }

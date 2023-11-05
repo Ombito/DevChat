@@ -1,7 +1,11 @@
 from flask_cors import CORS
 from flask import Flask, jsonify, request, session, make_response
 from flask_restful import Api, Resource, reqparse
+<<<<<<< HEAD
+from models import User, Post, Comment, Like, Friend, Message, db, datetime
+=======
 from models import User, Post, Comment, Like, Friend, Topic,db
+>>>>>>> d606b7640f36f6f696490befce1b65c65994c429
 from flask_migrate import Migrate
 
 app = Flask(__name__)
@@ -24,7 +28,7 @@ migrate = Migrate(app, db)
 #     if user_id is None and request.endpoint != 'login' and request.endpoint != 'checksession':
 #         return {"error": "unauthorized"}, 401
     
-
+    # home route
 class Index(Resource):
     def get(self):
         response_body = '<h1>Hello World</h1>'
@@ -33,7 +37,7 @@ class Index(Resource):
         return make_response(response_body,status,headers)
     
 
-    #  resource for users
+    #  users route
 class UserResource(Resource):
     def get(self):
         users = User.query.all()
@@ -49,27 +53,7 @@ class CheckSession(Resource):
             return user.to_dict(), 200
         return {"error":"Resource not found"}
 
-# class Signup(Resource):
-#     def post(self):
-#         data = request.get_json()
-#         full_name = data.get('full_name')
-#         username = data.get('username')
-#         password = data.get('password')
-#         email = data.get('email')
-#         gender = data.get('gender')
-
-#         if username and email and password:
-#             new_user = User(full_name=full_name, username=username, email=email, gender=gender)
-#             # new_user.set_password(password)
-#             new_user.password_hash = password
-
-#             db.session.add(new_user)
-#             db.session.commit()
-#             session['user_id'] = new_user.id
-
-#             return new_user.to_dict(), 201
-#         return {"error": "user details must be added"}, 422
-    
+    # signup route
 class Signup(Resource):
     def post(self):
         data = request.get_json()
@@ -87,7 +71,8 @@ class Signup(Resource):
             session['user_id'] = new_user.id
             return new_user.to_dict(), 201
         return {"error": "user details must be added"}, 422
-
+   
+    # login route
 class Login(Resource):
     def post(self):
         email  = request.get_json().get('email')
@@ -98,7 +83,94 @@ class Login(Resource):
             return user.to_dict(),201
         else:
             return {"error":"username or password is incorrect"},401
-        
+
+    # message route
+class MessageResource(Resource):
+    def get(self):
+        messages = Message.query.all()
+        message_list = [message.to_dict() for message in messages]
+        return jsonify(message_list)
+
+    def post(self):
+        data = request.get_json()
+        text = data.get('text')
+        sender_id = data.get('sender_id')
+        receiver_id = data.get('receiver_id')
+
+        if text: # and receiver_id
+            created_at = datetime.utcnow()
+            new_message = Message(text=text, sender_id=sender_id, receiver_id=receiver_id, created_at=created_at)
+            db.session.add(new_message)
+            db.session.commit()
+            return new_message.to_dict(), 201
+        return {"error": "Request is unprocessable", "details": "Ensure that the request data includes 'text', 'sender_id', and 'receiver_id' as required fields."}, 422
+        # data = request.get_json()
+        # text = data.get('text')
+        # created_at = data.get('created_at')
+        # sender_id = data.get('sender_id')
+        # receiver_id = data.get('receiver_id')
+
+        # if text and created_at and receiver_id and sender_id:
+        #     new_message = Message(text=text,  sender_id=sender_id, receiver_id=receiver_id)
+        #     db.session.add(new_message)
+        #     db.session.commit()
+        #     return new_message.to_dict(), 201
+        # return {"error": "user details must be added"}, 422
+    
+
+class UserMessagesResource(Resource):
+    def get(self, user_id):
+        # Fetch all messages sent or received by the user with the given user_id
+        messages = Message.query.filter(
+            (Message.sender_id == user_id) | (Message.receiver_id == user_id)
+        ).all()
+
+        # Fetch the user with the given user_id
+        user = User.query.get(user_id)
+
+        if user is None:
+            return jsonify({"error": "User not found"}), 404  # Return a 404 Not Found response if the user doesn't exist
+
+        # Serialize the user object
+        user_dict = user.to_dict()
+
+        # Serialize the messages using a list comprehension
+        message_list = [message.to_dict() for message in messages]
+
+        # Return a JSON response containing both the user data and the list of messages
+        response_data = {
+            # "user": user_dict,
+            "messages": message_list
+        }
+
+        return jsonify(response_data)
+
+
+# class UserMessagesResource(Resource):
+#     def get(self, user_id):
+#         # Fetch all messages sent or received by the user with the given user_id
+#         messages = Message.query.filter((Message.sender_id == user_id) | (Message.receiver_id == user_id)
+# ).all()
+#         message_list = [message.to_dict() for message in messages]
+
+#         # Fetch the user with the given user_id
+#         user = User.query.get(user_id)
+
+#         # Serialize the user object
+#         user_dict = user.to_dict()
+
+#         # Add the user data to the message list
+#         message_list.append(user_dict)
+#         # You can use a list comprehension to serialize the messages
+#         message_list = [message.to_dict() for message in messages]
+
+#         return jsonify(message_list)
+
+
+
+
+
+    # logout route
 class Logout(Resource):
     def delete(self):
         if session.get("user_id"):
@@ -108,7 +180,7 @@ class Logout(Resource):
             return {"error":"unauthorized 401"}
 
 
-    # resource for posts
+    # posts route
 class PostResource(Resource):
     def get(self):
         posts = Post.query.all()
@@ -134,7 +206,7 @@ class PostDetailResource(Resource):
         db.session.commit()
         return jsonify(message='Post deleted successfully')
 
-    # resource for comments
+    # comments route
 class CommentResource(Resource):
     def get(self):
         comments = Comment.query.all()
@@ -190,6 +262,9 @@ class FriendRequestResource(Resource):
         friend_request_list = [{"id": friend_request.id, "sender_id": friend_request.sender_id, "receiver_id": friend_request.receiver_id} for friend_request in friend_requests]
         return jsonify(friend_requests=friend_request_list)
 
+<<<<<<< HEAD
+    # Add resources to app
+=======
     
 class TopicResource(Resource):
     def get(self):
@@ -199,12 +274,15 @@ class TopicResource(Resource):
 
 
 
+>>>>>>> d606b7640f36f6f696490befce1b65c65994c429
 api.add_resource(Index,'/', endpoint='landing')
 api.add_resource(UserResource, '/users')
 api.add_resource(PostResource, '/posts')
 api.add_resource(PostDetailResource, '/posts/<int:post_id>')
 api.add_resource(Signup,'/signup', endpoint='signup')
 api.add_resource(Login,'/login', endpoint='login')
+api.add_resource(MessageResource,'/messages', endpoint='message')
+api.add_resource(UserMessagesResource, '/messages/<int:user_id>')
 api.add_resource(CheckSession,'/checksession', endpoint='checksession')
 api.add_resource(Logout,'/logout', endpoint='logout')
 api.add_resource(CommentResource, '/comments')

@@ -1,5 +1,5 @@
 from app import app, db
-from models import User, Post, Comment, Like, Friend, Inbox ,Topic
+from models import User, Post, Comment, Like, Friend, Message ,Topic
 from datetime import datetime
 
 with app.app_context():
@@ -234,20 +234,7 @@ with app.app_context():
     # Create sample friend connections
     friend1 = Friend(user=user1, friend=user2, status="accepted")
 
-    # Create sample inbox messages
-    inbox1 = Inbox(
-        name="Nicolas's Inbox",
-        message="Hello, Nic! How are you?",
-        created_at=datetime.utcnow(),
-        user=user1,
-    )
 
-    inbox2 = Inbox(
-        name="Alvin's Inbox",
-        message="Hi Alvin! I'm doing great, thanks!",
-        created_at=datetime.utcnow(),
-        user=user2,
-    )
     topic1=Topic (
         title="Babel",
         topic_text = "Is Babel new version here?",
@@ -275,36 +262,58 @@ with app.app_context():
     topics = [post1, post2, post3, post4, post5, post6, post7, post8]
     comments = [topic1, topic2, topic3, topic4, ]
     likes = [like1, like2]
-    inboxes = [inbox1, inbox2]
+  
 
-    db.session.add_all(users)
-    db.session.add_all(posts)
+    
+
+#     db.session.commit()
+
+
+
+# from app import db, User, Post, Comment, Like, Friend, Message
+
+    # Create sample users
+    user1 = User(full_name="John Doe", username="johndoe", email="johndoe@example.com", gender="Male")
+    user1.password_hash = "your_password_here"
+    user2 = User(full_name="Jane Smith", username="janesmith", email="janesmith@example.com", gender="Female")
+    user2.password_hash = "your_password_here"
+    # Add more users as needed
+
+    # Create sample posts
+    post1 = Post(user=user1, message="This is a sample post by John Doe")
+    post2 = Post(user=user2, message="Hello from Jane Smith!")
+    # Add more posts as needed
+
+    # Create sample comments
+    comment1 = Comment(user=user1, post=post2, content="Nice post, Jane!")
+    comment2 = Comment(user=user2, post=post1, content="Thanks, John!")
+    # Add more comments as needed
+
+    # Create sample likes
+    like1 = Like(user=user1, post=post2)
+    like2 = Like(user=user2, post=post1)
+    # Add more likes as needed
+
+    # Create sample friends
+    friend1 = Friend(user=user1, friend=user2, status="accepted")
+    friend2 = Friend(user=user2, friend=user1, status="accepted")
+    # Add more friends as needed
+
+    # Create sample messages
+    message1 = Message(sender=user1, receiver=user2, text="Hello, Jane!")
+    message2 = Message(sender=user2, receiver=user1, text="Hi, John!")
+    message3 = Message(sender=user1, receiver=user2, text="Hello, Jane!")
+    message4 = Message(sender=user2, receiver=user1, text="Hi, John!")
+    message5 = Message(sender=user1, receiver=user2, text="Hello, Jane!")
+    message6 = Message(sender=user2, receiver=user1, text="Hi, John!")
+    message7 = Message(sender=user1, receiver=user2, text="Hello, Jane!")
+    message8 = Message(sender=user2, receiver=user1, text="Hi, John!")
+    # Add more messages as needed
+    print('Seeding data...')
+# Add data to the session and commit it to the database
+    db.session.add_all([user1, user2, post1, post2, comment1, comment2, like1, like2, friend1, friend2, message1, message2, message3, message4, message5, message6, message7, message8])
     db.session.add_all(topics)
     db.session.add_all(comments)
     db.session.add_all(likes)
-    db.session.add_all(inboxes)
-
     db.session.commit()
-
-
-    topic1=Topic (
-        title="Babel",
-        topic_text = "Is Babel new version here?",
-        created_at = datetime.utcnow()
-    )
-    topic2=Topic (
-        title="Python ,Django",
-        topic_text = "Python Django Developers expo",
-        created_at = datetime.utcnow()
-    )
-    topic3=Topic (
-        title="Reaxt JS",
-        topic_text = "The new package is here",
-        created_at = datetime.utcnow()
-    )
-    topic4=Topic (
-        title="Ruby",
-        topic_text = "The Rails question???",
-        created_at = datetime.utcnow()
-    )
 

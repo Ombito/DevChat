@@ -77,6 +77,18 @@
 .postimg {
   padding-left: 2%;
 }
+.img-post {
+  width: 100px;
+  height: 5vh;
+}
+.img-div {
+  display: flex;
+  flex-direction: column;
+}
+.img-div input {
+  width: 270px;
+  height: 52%;
+}  
 .inbox {
   width: 27%;
   margin-top: 1%;

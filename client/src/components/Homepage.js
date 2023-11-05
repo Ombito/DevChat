@@ -77,9 +77,9 @@ function Homepage({ post }) {
   return (
     <div className="main">
       <Navbar />
-      <form className="search">
+      {/* <form className="search">
         <input type="text" placeholder="Search posts" value={search} onChange={handleChange} />
-      </form>
+      </form> */}
       <div className="createpost">
         <form submit={{ addNewPost }}>
         <textarea
@@ -87,8 +87,15 @@ function Homepage({ post }) {
           value={newPost.message}
           onChange={(e) => setNewPost({ ...newPost, message: e.target.value })}
         />
+<<<<<<< HEAD
+        <div className='img-div'>
+          <input placeholder="Enter image URL" className='img-post'/>
+          <button onClick={addNewPost}>Post</button>
+        </div>
+=======
         <button type='submit' >Post</button>
         </form>
+>>>>>>> d606b7640f36f6f696490befce1b65c65994c429
       </div>
 
       <div className="post">
