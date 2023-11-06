@@ -9,6 +9,7 @@ CORS(app)
 
 
 
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key='qwwerrtyyu123'
@@ -161,21 +162,16 @@ class CommentDetailResource(Resource):
         return jsonify(message='Comment deleted successfully')
 
 class LikeResource(Resource):
-    def get(self):
-        likes = Like.query.all()
-        like_list = [{"id": like.id, "user_id": like.user_id, "post_id": like.post_id} for like in likes]
-        return jsonify(likes=like_list)
-
+    parser = reqparse.RequestParser()
+    parser.add_argument('user_id', type=int, required=True)
+    parser.add_argument('post_id', type=int, required=True)
+    
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('user_id', type=int, required=True)
-        parser.add_argument('post_id', type=int, required=True)
-        args = parser.parse_args()
-
+        args = self.parser.parse_args()
         like = Like(user_id=args['user_id'], post_id=args['post_id'])
         db.session.add(like)
         db.session.commit()
-        return jsonify(like={"id": like.id, "user_id": like.user_id, "post_id": like.post_id})
+        return {'message': 'Like added successfully'}, 201
 
 class LikeDetailResource(Resource):
     def delete(self, like_id):
@@ -192,11 +188,23 @@ class FriendRequestResource(Resource):
 
     
 class TopicResource(Resource):
-    def get(self):
-        topics= Topic.query.all()
-        topic_list = [{'id': topic.id, 'title': topic.title, 'topic_text': topic.topic_text, 'created_at': topic.created_at.strftime('%Y-%m-%d %H:%M:%S')} for topic in topics]
-        return jsonify(topic_list)
-
+    def get(self, topic_id=None):
+        if topic_id:
+            topic = Topic.query.get_or_404(topic_id)
+            return {
+                'id': topic.id,
+                'title': topic.title,
+                'topic_text': topic.topic_text,
+                'created_at': topic.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            }
+        else:
+            topics = Topic.query.all()
+            return [{
+                'id': topic.id,
+                'title': topic.title,
+                'topic_text': topic.topic_text,
+                'created_at': topic.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            } for topic in topics]
 
 
 api.add_resource(Index,'/', endpoint='landing')
@@ -212,7 +220,7 @@ api.add_resource(CommentDetailResource, '/comments/<int:comment_id>')
 api.add_resource(LikeResource, '/likes')
 api.add_resource(LikeDetailResource, '/likes/<int:like_id>')
 api.add_resource(FriendRequestResource, '/friend_requests')
-api.add_resource(TopicResource, '/topic')
+api.add_resource(TopicResource, '/topics','/topics/<int:topic_id>')
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
 
