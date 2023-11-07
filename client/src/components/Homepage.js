@@ -1,17 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaThumbsUp, FaComment } from 'react-icons/fa';
+import { FaComment, FaThumbsUp } from 'react-icons/fa';
 import Navbar from './Navbar';
 import './Homepage.css';
 
-function Homepage({ post }) {
+function Homepage({ post,initialLikes, userId, postId } ) {
   const navigate = useNavigate();
   const [getPosts, setPosts] = useState([]);
-  const [likes, setLikes] = useState(post?.likes || 0);
   const [newPost, setNewPost] = useState({ user: '', message: '' });
   const [search, setSearch] = useState('');
   const [topics, setTopics] = useState([]);
+  
 
 
   useEffect(() => {
@@ -24,19 +24,19 @@ function Homepage({ post }) {
           console.error('Data is not in the expected format:', data);
         }
       });
+  }, []);
 
+  useEffect(() => {
     fetch('http://127.0.0.1:5555/topics')
-      .then((response) => response.json())
-      .then((data) => {
-        if (data && Array.isArray(data.topic)) {
-          setTopics(data.topic);
-          
-
-        } else {
-          console.error('Data is not in the expected format:', data);
-        }
+      .then(response => response.json())
+      .then(data => {
+        setTopics(data);
+      })
+      .catch(error => {
+        console.log(error);
       });
   }, []);
+
 
   function addNewPost() {
       fetch("http://127.0.0.1:5555/posts", {
@@ -57,22 +57,52 @@ function Homepage({ post }) {
     navigate(`/post/${postId}`);
   }
 
+  
+  const [likes, setLikes] = useState(initialLikes);
+  const [clicked, setClicked] = useState(false);
+
+    const handleLikeClick = () => {
+      setLikes(likes + 1);
+      setClicked(true);
+    };
+
+    useEffect(() => {
+      if (clicked) {
+        fetch('http://127.0.0.1:5555/likes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            post_id: postId
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            setLikes(data.likes); 
+          })
+          .catch(error => console.error(error));
+      }
+    }, [clicked, userId, postId]);
+
+  
+
+  const filtered = getPosts.filter((post) => {
+    const cleanMessage = post.message.trim().toLowerCase(); 
+    const cleanSearch = search.trim().toLowerCase(); 
+
+    if (cleanSearch === '') {
+      return true;
+    } else {
+      return cleanMessage.includes(cleanSearch);
+    }
+  });
   function handleChange(e) {
     setSearch(e.target.value);
   }
 
-  function handleLike() {
-    setLikes(likes + 1);
-  }
-
-  const filtered = getPosts.filter((i) => {
-    if (search === '') {
-      return true;
-    } else {
-
-      return i.name && i.name.includes(search);
-    }
-  });
 
   return (
     <div className="main">
@@ -97,7 +127,6 @@ function Homepage({ post }) {
         </form>
 >>>>>>> d606b7640f36f6f696490befce1b65c65994c429
       </div>
-
       <div className="post">
         {filtered.map((post) => (
           <div key={post.id} className="user-item">
@@ -111,7 +140,9 @@ function Homepage({ post }) {
               </div>
               <div className="ptext">
                 <h4>{post.timestamp}</h4>
-                <button onClick={handleLike}><FaThumbsUp /> Like ({likes})</button>
+                <button onClick={handleLikeClick}>
+                  {likes} Likes
+                </button>
                 <button onClick={() => handleCommentClick(post.id)}><FaComment /> Comment</button>
                 <div className="timestamp">{new Date().toLocaleString()}</div>
               </div>
@@ -122,6 +153,14 @@ function Homepage({ post }) {
 
       <div className="topics">
         <h1 className="cin">Topics</h1>
+        <h1 className="">Python ,Django</h1>
+        <h2>Python Django Developers expo</h2>
+        <h1 className="">Reaxt JS</h1>
+        <h2>The new package is here</h2>
+        <h1 className="">Ruby</h1>
+        <h2>The Rails question???</h2>
+        <h1 className="">FOTRAN</h1>
+        <h2>FOTRAN expo</h2>
         <ul>
           {topics.map((topic) => ( 
             <li key={topic.id}>
@@ -135,5 +174,6 @@ function Homepage({ post }) {
     </div>
   );
 }
+
 
 export default Homepage;
