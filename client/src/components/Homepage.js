@@ -9,9 +9,11 @@ function Homepage({ post }) {
   const navigate = useNavigate();
   const [getPosts, setPosts] = useState([]);
   const [likes, setLikes] = useState(post?.likes || 0);
+  const [isLiked, setIsLiked] = useState(false);
   const [newPost, setNewPost] = useState({ user: '', message: '' });
   const [search, setSearch] = useState('');
   const [topics, setTopics] = useState([]);
+  const [userId, setUserId] = useState(generateRandomUserId());
 
 
   useEffect(() => {
@@ -38,19 +40,52 @@ function Homepage({ post }) {
       });
   }, []);
 
+  const handleLogin = (user) => {
+   
+    const loggedInUserId = user.id; 
+    setUserId(loggedInUserId);
+  };
+
+  function generateRandomUserId() {
+    return Math.floor(Math.random() * 100000); 
+  }
   function addNewPost() {
+    console.log("addNewPost function called");
+    
+    if (userId) {
+      const postData = {
+        message: newPost.message,
+        image: newPost.image_url,
+        userid: userId, 
+      };
+
       fetch("http://127.0.0.1:5555/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newPost),
+        body: JSON.stringify(postData),
       })
-        .then((response) => response.json())
-        .then((data) => setPosts(data));
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error(`Failed to create a new post: ${response.status}`);
+        })
+        .then((data) => {
+          
+          console.log("New post created:", data);
+        })
+        .catch((error) => {
+          console.error("Error creating a new post:", error);
+        });
+    } else {
       
-      
+      console.log("User is not logged in. Please log in before posting.");
+    }
   }
+  
+  
 
 
   function handleCommentClick(postId) {
@@ -63,6 +98,7 @@ function Homepage({ post }) {
 
   function handleLike() {
     setLikes(likes + 1);
+    setIsLiked(true);
   }
 
   const filtered = getPosts.filter((i) => {
@@ -74,6 +110,7 @@ function Homepage({ post }) {
     }
   });
 
+  const likeButtonClass = isLiked ? 'liked' : 'not-liked';
   return (
     <div className="main">
       <Navbar />
@@ -81,21 +118,16 @@ function Homepage({ post }) {
         <input type="text" placeholder="Search posts" value={search} onChange={handleChange} />
       </form> */}
       <div className="createpost">
-        <form submit={{ addNewPost }}>
+        {/* <form submit={{ addNewPost }}> */}
         <textarea
           placeholder="Write a post"
           value={newPost.message}
           onChange={(e) => setNewPost({ ...newPost, message: e.target.value })}
         />
-<<<<<<< HEAD
         <div className='img-div'>
-          <input placeholder="Enter image URL" className='img-post'/>
+          <input placeholder="Enter image URL" id='img-post' value={newPost.image_url} onChange={(e) => setNewPost({ ...newPost, image_url: e.target.value })}/>
           <button onClick={addNewPost}>Post</button>
         </div>
-=======
-        <button type='submit' >Post</button>
-        </form>
->>>>>>> d606b7640f36f6f696490befce1b65c65994c429
       </div>
 
       <div className="post">
@@ -111,7 +143,7 @@ function Homepage({ post }) {
               </div>
               <div className="ptext">
                 <h4>{post.timestamp}</h4>
-                <button onClick={handleLike}><FaThumbsUp /> Like ({likes})</button>
+                <button onClick={handleLike} className={likeButtonClass}><FaThumbsUp /> ({likes}) Likes </button>
                 <button onClick={() => handleCommentClick(post.id)}><FaComment /> Comment</button>
                 <div className="timestamp">{new Date().toLocaleString()}</div>
               </div>

@@ -68,6 +68,18 @@ class Post(db.Model):
     comments = db.relationship('Comment', back_populates='post')
     likes = db.relationship('Like', back_populates='post')
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_pic": self.user_pic,
+            "message": self.message,
+            "created_at": self.created_at,
+            "user_id": self.user_id,
+            "image": self.image,
+            "comments_count": self.comments_count,
+            "likes_count": self.likes_count
+        }
+    
     def __repr__(self):
         return f"<Post(id={self.id}, author='{self.user.username}')>"
 
@@ -130,6 +142,18 @@ class Message(db.Model):
 
     sender = db.relationship('User', foreign_keys=[sender_id], back_populates='sent_messages')
     receiver = db.relationship('User', foreign_keys=[receiver_id], back_populates='received_messages')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'text': self.text,
+            'created_at': self.created_at, #.isoformat()
+            "sender_id": self.sender_id,
+            "receiver_id": self.receiver_id,
+            'sender_username': self.sender.full_name if self.sender else None,
+            'receiver_username': self.receiver.full_name if self.receiver else None,
+        }
+    
     def __repr__(self):
         return f"Inbox(id={self.id}, user='{self.user.username}', message='{self.message}')"
     

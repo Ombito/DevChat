@@ -1,15 +1,11 @@
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask import Flask, jsonify, request, session, make_response
 from flask_restful import Api, Resource, reqparse
-<<<<<<< HEAD
-from models import User, Post, Comment, Like, Friend, Message, db, datetime
-=======
-from models import User, Post, Comment, Like, Friend, Topic,db
->>>>>>> d606b7640f36f6f696490befce1b65c65994c429
+from models import User, Post, Comment, Like, Friend, Message, db, datetime, Topic
 from flask_migrate import Migrate
 
 app = Flask(__name__)
-CORS(app)
+CORS(app,support_credentials=True)
 
 
 
@@ -104,69 +100,28 @@ class MessageResource(Resource):
             db.session.commit()
             return new_message.to_dict(), 201
         return {"error": "Request is unprocessable", "details": "Ensure that the request data includes 'text', 'sender_id', and 'receiver_id' as required fields."}, 422
-        # data = request.get_json()
-        # text = data.get('text')
-        # created_at = data.get('created_at')
-        # sender_id = data.get('sender_id')
-        # receiver_id = data.get('receiver_id')
-
-        # if text and created_at and receiver_id and sender_id:
-        #     new_message = Message(text=text,  sender_id=sender_id, receiver_id=receiver_id)
-        #     db.session.add(new_message)
-        #     db.session.commit()
-        #     return new_message.to_dict(), 201
-        # return {"error": "user details must be added"}, 422
-    
+        
 
 class UserMessagesResource(Resource):
     def get(self, user_id):
-        # Fetch all messages sent or received by the user with the given user_id
         messages = Message.query.filter(
             (Message.sender_id == user_id) | (Message.receiver_id == user_id)
         ).all()
 
-        # Fetch the user with the given user_id
         user = User.query.get(user_id)
 
         if user is None:
-            return jsonify({"error": "User not found"}), 404  # Return a 404 Not Found response if the user doesn't exist
-
-        # Serialize the user object
+            return jsonify({"error": "User not found"}), 404  
         user_dict = user.to_dict()
 
-        # Serialize the messages using a list comprehension
         message_list = [message.to_dict() for message in messages]
 
-        # Return a JSON response containing both the user data and the list of messages
         response_data = {
             # "user": user_dict,
             "messages": message_list
         }
 
         return jsonify(response_data)
-
-
-# class UserMessagesResource(Resource):
-#     def get(self, user_id):
-#         # Fetch all messages sent or received by the user with the given user_id
-#         messages = Message.query.filter((Message.sender_id == user_id) | (Message.receiver_id == user_id)
-# ).all()
-#         message_list = [message.to_dict() for message in messages]
-
-#         # Fetch the user with the given user_id
-#         user = User.query.get(user_id)
-
-#         # Serialize the user object
-#         user_dict = user.to_dict()
-
-#         # Add the user data to the message list
-#         message_list.append(user_dict)
-#         # You can use a list comprehension to serialize the messages
-#         message_list = [message.to_dict() for message in messages]
-
-#         return jsonify(message_list)
-
-
 
 
 
@@ -183,21 +138,25 @@ class Logout(Resource):
     # posts route
 class PostResource(Resource):
     def get(self):
-        posts = Post.query.all()
+        posts = Post.query.order_by(Post.created_at.desc()).all()
         post_list = [{"id": post.id, "message": post.message, "user_pic": post.user_pic, "user_id": post.user_id, "image": post.image} for post in posts]
         return jsonify(posts=post_list)
 
+    @cross_origin()
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('message', type=str, required=True)
-        parser.add_argument('user_id', type=int, required=True)
-        parser.add_argument('image', type=str, required=True)
-        args = parser.parse_args()
+        data = request.get_json()
+        
+        new_post = Post(
+            message=data.get("message"),
+            image=data.get("image_url"),
+            user_id=data.get("userid")
+        )
 
-        post = Post(message=args['message'], user_id=args['user_id'], image=args['image'])
-        db.session.add(post)
+        db.session.add(new_post)
         db.session.commit()
-        return jsonify(post={"id": post.id, "message": post.message, "user_id": post.user_id, "image": post.image})
+
+        return jsonify(new_post.to_dict()), 201 
+    
 
 class PostDetailResource(Resource):
     def delete(self, post_id):
@@ -262,9 +221,6 @@ class FriendRequestResource(Resource):
         friend_request_list = [{"id": friend_request.id, "sender_id": friend_request.sender_id, "receiver_id": friend_request.receiver_id} for friend_request in friend_requests]
         return jsonify(friend_requests=friend_request_list)
 
-<<<<<<< HEAD
-    # Add resources to app
-=======
     
 class TopicResource(Resource):
     def get(self):
@@ -274,7 +230,6 @@ class TopicResource(Resource):
 
 
 
->>>>>>> d606b7640f36f6f696490befce1b65c65994c429
 api.add_resource(Index,'/', endpoint='landing')
 api.add_resource(UserResource, '/users')
 api.add_resource(PostResource, '/posts')
