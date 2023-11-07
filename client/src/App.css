@@ -130,8 +130,6 @@ body{
 }
 .profile-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   border: 3px solid #000;
   padding: 20px;
   margin: 20px;
@@ -148,12 +146,13 @@ body{
   border: 2px solid #000;
   border-radius: 50%;
   
+  
 }
 
 .profile-details {
   text-align: center;
   padding: 10%;
-}
+  }
 
 .profile-details h2 {
   font-size: 24px;
@@ -171,4 +170,13 @@ body{
   background-color:rgb(28, 28, 31) ;
   margin-left: -42%;
 
+}
+.txt{
+  border-radius: 10px;
+  color: #ffffff;
+  padding: 4%;
+  border: 2px solid #000;
+  width: 850%;
+  margin-left: -54%;
+  background-color: rgb(28, 28, 31);
 }

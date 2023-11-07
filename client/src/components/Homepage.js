@@ -1,18 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaThumbsUp, FaComment } from 'react-icons/fa';
+import { FaComment, FaThumbsUp } from 'react-icons/fa';
 import Navbar from './Navbar';
 import './Homepage.css';
 
-function Homepage({ post }) {
+function Homepage({ post,  postId } ) {
   const navigate = useNavigate();
   const [getPosts, setPosts] = useState([]);
-  const [likes, setLikes] = useState(post?.likes || 0);
   const [isLiked, setIsLiked] = useState(false);
   const [newPost, setNewPost] = useState({ user: '', message: '' });
   const [search, setSearch] = useState('');
   const [topics, setTopics] = useState([]);
+  
   const [userId, setUserId] = useState(generateRandomUserId());
 
 
@@ -25,18 +25,17 @@ function Homepage({ post }) {
         } else {
           console.error('Data is not in the expected format:', data);
         }
-      });
+      }, 2000);
+  }, []);
 
+  useEffect(() => {
     fetch('http://127.0.0.1:5555/topics')
-      .then((response) => response.json())
-      .then((data) => {
-        if (data && Array.isArray(data.topic)) {
-          setTopics(data.topic);
-          
-
-        } else {
-          console.error('Data is not in the expected format:', data);
-        }
+      .then(response => response.json())
+      .then(data => {
+        setTopics(data);
+      })
+      .catch(error => {
+        console.log(error);
       });
   }, []);
 
@@ -55,7 +54,7 @@ function Homepage({ post }) {
     if (userId) {
       const postData = {
         message: newPost.message,
-        image: newPost.image_url,
+        image: newPost.image,
         userid: userId, 
       };
 
@@ -88,10 +87,51 @@ function Homepage({ post }) {
   
 
 
-  function handleCommentClick(postId) {
-    navigate(`/post/${postId}`);
+  function handleCommentClick() {  
   }
 
+  
+  // const [likes, setLikes] = useState(initialLikes);
+  const [clicked, setClicked] = useState(false);
+
+    const handleLikeClick = () => {
+      setLikes(likes + 1);
+      setClicked(true);
+    };
+
+    useEffect(() => {
+      if (clicked) {
+        fetch('http://127.0.0.1:5555/likes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            post_id: postId
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            setLikes(data.likes); 
+          })
+          .catch(error => console.error(error));
+      }
+    }, [clicked, userId, postId]);
+
+  
+
+  // const filtered = getPosts.filter((post) => {
+  //   const cleanMessage = post.message.trim().toLowerCase(); 
+  //   const cleanSearch = search.trim().toLowerCase(); 
+
+  //   if (cleanSearch === '') {
+  //     return true;
+  //   } else {
+  //     return cleanMessage.includes(cleanSearch);
+  //   }
+  // });
   function handleChange(e) {
     setSearch(e.target.value);
   }
@@ -129,7 +169,6 @@ function Homepage({ post }) {
           <button onClick={addNewPost}>Post</button>
         </div>
       </div>
-
       <div className="post">
         {filtered.map((post) => (
           <div key={post.id} className="user-item">
@@ -144,7 +183,7 @@ function Homepage({ post }) {
               <div className="ptext">
                 <h4>{post.timestamp}</h4>
                 <button onClick={handleLike} className={likeButtonClass}><FaThumbsUp /> ({likes}) Likes </button>
-                <button onClick={() => handleCommentClick(post.id)}><FaComment /> Comment</button>
+                <button onClick={() => handleCommentClick()} className="comments"><FaComment /> Comment</button>
                 <div className="timestamp">{new Date().toLocaleString()}</div>
               </div>
             </div>
@@ -153,19 +192,32 @@ function Homepage({ post }) {
       </div>
 
       <div className="topics">
-        <h1 className="cin">Topics</h1>
-        <ul>
+        <div className="groups">
+          <h1>Top Groups</h1>
+          <p className="">Python, Django Developers expo</p>
+          <p>CodeGladiators</p>
+          <p className="">Ruby101</p>
+          <p>FOTRAN Expo</p>
+          <p className="">Kenya JavaScript Developers</p>
+          <p>Space ya Engineers</p>
+          <p className="">Programming Memes</p>
+          <p>DevDynamos</p>
+          <p>HackMasters</p>
+          <p>ProgramPioneers</p>
+          <p>ByteBrigade</p>
+        </div>
+        <div className="groups">
+          <h2>Trending Now</h2>
           {topics.map((topic) => ( 
-            <li key={topic.id}>
-              {topic.title}<br />
+            <p key={topic.id}>
               {topic.topic_text}<br />
-              {topic.created_at}<br />
-            </li>
+            </p>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
 }
+
 
 export default Homepage;

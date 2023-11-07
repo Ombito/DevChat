@@ -22,13 +22,14 @@ function Profile() {
                 <div className="profile-card">
                     {user && (
                         <>
+                            <h1>Profile</h1>
                             <img src={user.profile_picture} alt="Profile Picture" className="profile-picture" />
                             <div className="profile-details">
-                                <h2> {user.full_name}</h2>
-                                <h2>{user.username}</h2>
-                                <p>Age: {user.age}</p>
-                                <p>Gender: {user.gender}</p>
-                                <p>Bio: {user.bio}</p>
+                                <h2 className="txt"> {user.full_name}</h2>
+                                <h2 className="txt">{user.username}</h2>
+                                <p className="txt">Age: {user.age}</p>
+                                <p className="txt">Gender: {user.gender}</p>
+                                <p className="txt">Bio: {user.bio}</p>
                             </div>
                         </>
                     )}
