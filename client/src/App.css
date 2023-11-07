@@ -9,6 +9,7 @@
 .logo img{
   height: 10vh;
   padding: 1%;
+  cursor: pointer;
 }
 
 .nav-links{
@@ -19,7 +20,15 @@
   gap: 25%;
 
 }
-
+#nav-div {
+  /* display: flex; */
+  justify-content: space-between;
+}
+#user-icon {
+  margin-left: 92%;
+  margin-top: 2.5%;
+  font-size: 2em;
+}
 .nav1{
   color: #ffffff;
 }
@@ -34,7 +43,7 @@
 }
 
 body{
-  background-color:rgb(49,51,56);
+  background-color:rgba(158, 174, 216, 0.466);
   margin-top: 135px;
   
 }
@@ -64,11 +73,11 @@ body{
   width: 62%;
   margin-left: 3%;
   margin-top: 4%;
-  border: 3px solid rgb(28, 28, 31);
+  border: 1px solid rgb(28, 28, 31);
   padding: 10px;
   border-radius: 10px;
-  color: aliceblue;
-  background:rgb(70, 72, 77);
+  color: rgb(0, 0, 0);
+  background-color:rgb(70, 72, 77);
   position: fixed;
   
 }
@@ -112,7 +121,7 @@ body{
 .profile-picture {
   width: 100px;
   height: 100px;
-  border-radius: 50%; /* Make it round */
+  border-radius: 50%;
 }
 
 .username {

@@ -11,16 +11,18 @@
     width: 27em;
     border-radius: 4em;
   }
+  .main {
+    margin: 0 3%;
+  }
   .createpost{
     display: flex;
     position: fixed;
     margin-top: -1.8%;
-    margin-left: 3%;
-    height: 4vh;
+    margin-left: 2%;
     gap: 5px;
   }
   .createpost textarea {
-    height: 6vh;
+    height: 8vh;
     width: 30em;
     border-radius: 5px;
   }
@@ -29,44 +31,52 @@
     color: rgb(247, 250, 252);
 }
 .post {
-  width: 60%;
+  width: 54%;
   margin-left: 2%;
-  margin-top: 2%;
-  padding: 25px;
+  margin-top: 4%;
+  padding: 1% 25px;
   border-radius: 10px;
-  color: aliceblue;
-  background:rgb(70, 72, 77);
+  color: rgb(0, 0, 0);
+  background:rgba(70, 72, 77, 0.568);
   overflow: auto;
   max-height: 66vh;
 }
 .ptext{
-  background-color:rgb(76, 80, 88);
+  background-color:rgba(175, 183, 199, 0.534);
   border-radius: 1em;
   padding: 0 2%;
   margin-bottom: 5%;
+  width: 100%;
 }
 .topics {
   width: 25%;
   border-radius: 10px;
   color: aliceblue;
   background:rgb(70, 72, 77);
-  margin-left: 71%;
+  margin-left: 66%;
   margin-top: -2%;
   position: fixed;
   height: 75%;
   overflow: auto;
 }
 .post2{
-  height: 20%;
+  height: 17%;
   width: 100%;
   border-radius: 50%;
 }
 .user-group img {
   height: 10vh;
+  
+}
+.user-item {
+  padding: 0 3% 3% 0;
+  margin: auto;
+  
 }
 .post-group {
   display: flex;
   flex-direction: column;
+  padding: 0 4%;
 }
 .post-group p1 {
   padding-bottom: 2%;
@@ -74,21 +84,21 @@
   font-size: 18px;
   width: 100%;
 }
-.postimg {
+.postimg img{
   padding-left: 2%;
+  height: 55vh;
+  width: 100%;
 }
-.img-post {
-  width: 100px;
+#img-post {
+  width: 300px;
   height: 5vh;
 }
 .img-div {
   display: flex;
   flex-direction: column;
+  gap: 5px;
 }
-.img-div input {
-  width: 270px;
-  height: 52%;
-}  
+
 .inbox {
   width: 27%;
   margin-top: 1%;
@@ -99,5 +109,22 @@
   background:rgb(70, 72, 77);
   position: fixed;
   border-radius: 10px;
- 
+}
+.img-div button {
+  width: 50%;
+  height: 5vh;
+  margin-left: 0;
+}
+.liked {
+  width: 100px;
+  color: rgb(27, 211, 67);
+  background-color: transparent;
+}
+.not-liked {
+  background-color: transparent;
+  color: black;
+  width: 100px;
+}
+.timestamp {
+  padding-top: 2%;
 }

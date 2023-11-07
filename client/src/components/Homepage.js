@@ -5,13 +5,15 @@ import { FaComment, FaThumbsUp } from 'react-icons/fa';
 import Navbar from './Navbar';
 import './Homepage.css';
 
-function Homepage({ post,initialLikes, userId, postId } ) {
+function Homepage({ post,  postId } ) {
   const navigate = useNavigate();
   const [getPosts, setPosts] = useState([]);
+  const [isLiked, setIsLiked] = useState(false);
   const [newPost, setNewPost] = useState({ user: '', message: '' });
   const [search, setSearch] = useState('');
   const [topics, setTopics] = useState([]);
   
+  const [userId, setUserId] = useState(generateRandomUserId());
 
 
   useEffect(() => {
@@ -23,7 +25,7 @@ function Homepage({ post,initialLikes, userId, postId } ) {
         } else {
           console.error('Data is not in the expected format:', data);
         }
-      });
+      }, 2000);
   }, []);
 
   useEffect(() => {
@@ -37,28 +39,59 @@ function Homepage({ post,initialLikes, userId, postId } ) {
       });
   }, []);
 
+  const handleLogin = (user) => {
+   
+    const loggedInUserId = user.id; 
+    setUserId(loggedInUserId);
+  };
 
+  function generateRandomUserId() {
+    return Math.floor(Math.random() * 100000); 
+  }
   function addNewPost() {
+    console.log("addNewPost function called");
+    
+    if (userId) {
+      const postData = {
+        message: newPost.message,
+        image: newPost.image,
+        userid: userId, 
+      };
+
       fetch("http://127.0.0.1:5555/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newPost),
+        body: JSON.stringify(postData),
       })
-        .then((response) => response.json())
-        .then((data) => setPosts(data));
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error(`Failed to create a new post: ${response.status}`);
+        })
+        .then((data) => {
+          
+          console.log("New post created:", data);
+        })
+        .catch((error) => {
+          console.error("Error creating a new post:", error);
+        });
+    } else {
       
-      
+      console.log("User is not logged in. Please log in before posting.");
+    }
   }
+  
+  
 
 
-  function handleCommentClick(postId) {
-    navigate(`/post/${postId}`);
+  function handleCommentClick() {  
   }
 
   
-  const [likes, setLikes] = useState(initialLikes);
+  // const [likes, setLikes] = useState(initialLikes);
   const [clicked, setClicked] = useState(false);
 
     const handleLikeClick = () => {
@@ -89,21 +122,35 @@ function Homepage({ post,initialLikes, userId, postId } ) {
 
   
 
-  const filtered = getPosts.filter((post) => {
-    const cleanMessage = post.message.trim().toLowerCase(); 
-    const cleanSearch = search.trim().toLowerCase(); 
+  // const filtered = getPosts.filter((post) => {
+  //   const cleanMessage = post.message.trim().toLowerCase(); 
+  //   const cleanSearch = search.trim().toLowerCase(); 
 
-    if (cleanSearch === '') {
-      return true;
-    } else {
-      return cleanMessage.includes(cleanSearch);
-    }
-  });
+  //   if (cleanSearch === '') {
+  //     return true;
+  //   } else {
+  //     return cleanMessage.includes(cleanSearch);
+  //   }
+  // });
   function handleChange(e) {
     setSearch(e.target.value);
   }
 
+  function handleLike() {
+    setLikes(likes + 1);
+    setIsLiked(true);
+  }
 
+  const filtered = getPosts.filter((i) => {
+    if (search === '') {
+      return true;
+    } else {
+
+      return i.name && i.name.includes(search);
+    }
+  });
+
+  const likeButtonClass = isLiked ? 'liked' : 'not-liked';
   return (
     <div className="main">
       <Navbar />
@@ -111,21 +158,16 @@ function Homepage({ post,initialLikes, userId, postId } ) {
         <input type="text" placeholder="Search posts" value={search} onChange={handleChange} />
       </form> */}
       <div className="createpost">
-        <form submit={{ addNewPost }}>
+        {/* <form submit={{ addNewPost }}> */}
         <textarea
           placeholder="Write a post"
           value={newPost.message}
           onChange={(e) => setNewPost({ ...newPost, message: e.target.value })}
         />
-<<<<<<< HEAD
         <div className='img-div'>
-          <input placeholder="Enter image URL" className='img-post'/>
+          <input placeholder="Enter image URL" id='img-post' value={newPost.image_url} onChange={(e) => setNewPost({ ...newPost, image_url: e.target.value })}/>
           <button onClick={addNewPost}>Post</button>
         </div>
-=======
-        <button type='submit' >Post</button>
-        </form>
->>>>>>> d606b7640f36f6f696490befce1b65c65994c429
       </div>
       <div className="post">
         {filtered.map((post) => (
@@ -140,10 +182,8 @@ function Homepage({ post,initialLikes, userId, postId } ) {
               </div>
               <div className="ptext">
                 <h4>{post.timestamp}</h4>
-                <button onClick={handleLikeClick}>
-                  {likes} Likes
-                </button>
-                <button onClick={() => handleCommentClick(post.id)}><FaComment /> Comment</button>
+                <button onClick={handleLike} className={likeButtonClass}><FaThumbsUp /> ({likes}) Likes </button>
+                <button onClick={() => handleCommentClick()} className="comments"><FaComment /> Comment</button>
                 <div className="timestamp">{new Date().toLocaleString()}</div>
               </div>
             </div>
@@ -152,24 +192,28 @@ function Homepage({ post,initialLikes, userId, postId } ) {
       </div>
 
       <div className="topics">
-        <h1 className="cin">Topics</h1>
-        <h1 className="">Python ,Django</h1>
-        <h2>Python Django Developers expo</h2>
-        <h1 className="">Reaxt JS</h1>
-        <h2>The new package is here</h2>
-        <h1 className="">Ruby</h1>
-        <h2>The Rails question???</h2>
-        <h1 className="">FOTRAN</h1>
-        <h2>FOTRAN expo</h2>
-        <ul>
+        <div className="groups">
+          <h1>Top Groups</h1>
+          <p className="">Python, Django Developers expo</p>
+          <p>CodeGladiators</p>
+          <p className="">Ruby101</p>
+          <p>FOTRAN Expo</p>
+          <p className="">Kenya JavaScript Developers</p>
+          <p>Space ya Engineers</p>
+          <p className="">Programming Memes</p>
+          <p>DevDynamos</p>
+          <p>HackMasters</p>
+          <p>ProgramPioneers</p>
+          <p>ByteBrigade</p>
+        </div>
+        <div className="groups">
+          <h2>Trending Now</h2>
           {topics.map((topic) => ( 
-            <li key={topic.id}>
-              {topic.title}<br />
+            <p key={topic.id}>
               {topic.topic_text}<br />
-              {topic.created_at}<br />
-            </li>
+            </p>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );

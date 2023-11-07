@@ -129,7 +129,7 @@ useEffect(() => {
           setNewMessage('');
           if (messageHistoryRef.current) {
           messageHistoryRef.current.scrollTop = messageHistoryRef.current.scrollHeight;
-          }
+          }setNewMessage('');
         })
         .catch((error) => {
           console.error('Error posting message:', error);
